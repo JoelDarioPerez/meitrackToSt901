@@ -136,8 +136,8 @@ newPackage = (data) => {
 
 // Función para enviar los datos a través de netcat
 function sendViaNetcat(data) {
-  const host = HOST_output;
-  const port = PORT_output;
+  const host = "hwc9760.gpsog.com";
+  const port = 9760;
 
   // Creamos el cliente TCP
   const client = net.connect(port, host, () => {
@@ -204,6 +204,6 @@ function gpsTrackerServer(host, port) {
 }
 
 // Ejecutamos la función del servidor
-const host = HOST_input; // Escucha en todas las interfaces
-const port = PORT_input; // Puerto del servidor TCP
+const host = "0.0.0.0"; // Escucha en todas las interfaces
+const port = 9700; // Puerto del servidor TCP
 gpsTrackerServer(host, port);
