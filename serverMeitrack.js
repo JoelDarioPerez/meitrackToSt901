@@ -1,7 +1,6 @@
 const net = require("net");
 const { spawn } = require("child_process");
 
-
 function parseMeitrackPackage(packageData) {
   const fields = packageData.split(",");
 
@@ -33,6 +32,12 @@ function parseMeitrackPackage(packageData) {
   };
 
   return obj;
+}
+function packageToString(packageData) {
+  // Convierte el paquete (buffer) a un string
+  const packageString = packageData.toString("utf8");
+
+  return packageString;
 }
 let newPackage = (parsedPackage) => {
   if (parsedPackage.imei === "013227009650882") {
@@ -162,9 +167,10 @@ function sendModifiedPackage(modifiedPackage) {
 }
 
 function handlePackage(packageData) {
-  if (typeof packageData === "string" && packageData.startsWith("$$")) {
+  if (packageData.startsWith("$$")) {
     const parsedPackage = parseMeitrackPackage(packageData);
-    console.log(newPackage(parsedPackage));
+    const packageString = packageToString(packageData);
+    console.log(packageString);
   } else {
     console.log(packageData);
   }
