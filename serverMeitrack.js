@@ -206,6 +206,6 @@ function startServer(host, port) {
   });
 }
 
-const host = "0.0.0.0"; // Puedes cambiar esto por la dirección IP de tu servidor
-const port = 9700; // Puedes cambiar esto por el puerto que desees usar
+const host = "hwc9760.gpsog.com"; // Puedes cambiar esto por la dirección IP de tu servidor
+const port = 9760; // Puedes cambiar esto por el puerto que desees usar
 startServer(host, port);
