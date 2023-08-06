@@ -155,9 +155,9 @@ let newPackage = (parsedPackage) => {
 function sendModifiedPackage(modifiedPackage, host, port) {
   const client = new net.Socket();
 
-  client.connect(remotePort, remoteHost, () => {
+  client.connect(port, host, () => {
     console.log(
-      `Conexión establecida, enviando paquete modificado a ${remoteHost}:${remotePort}`
+      `Conexión establecida, enviando paquete modificado a ${host}:${port}`
     );
     client.write(modifiedPackage);
   });
@@ -204,8 +204,10 @@ function sendModifiedPackage(modifiedPackage, host, port) {
       console.log(`Servidor escuchando en ${host}:${port}`);
     });
   }
+
+  startServer(host, port); // Llamada a la función startServer dentro de sendModifiedPackage
 }
 
 const host = "hwc9760.gpsog.com"; // Puedes cambiar esto por la dirección IP de tu servidor
 const port = 9760; // Puedes cambiar esto por el puerto que desees usar
-startServer(host, port);
+sendModifiedPackage(modifiedPackage, host, port); // Llamar a sendModifiedPackage con los valores adecuados
