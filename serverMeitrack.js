@@ -155,13 +155,15 @@ const net = require("net");
 function sendModifiedPackage(modifiedPackage, host, port) {
   const client = new net.Socket();
 
-  client.connect(port, host, () => {
-    console.log("Conexión establecida, enviando paquete modificado...");
+  client.connect(remotePort, remoteHost, () => {
+    console.log(
+      `Conexión establecida, enviando paquete modificado a ${remoteHost}:${remotePort}`
+    );
     client.write(modifiedPackage);
   });
 
   client.on("data", (data) => {
-    console.log(`Respuesta del servidor: ${data}`);
+    console.log(`Respuesta del servidor remoto: ${data}`);
     client.destroy(); // Cierra la conexión después de recibir la respuesta
   });
 
@@ -173,35 +175,35 @@ function sendModifiedPackage(modifiedPackage, host, port) {
   client.on("close", () => {
     console.log("Conexión cerrada");
   });
-}
 
-function handlePackage(packageData) {
-  if (startsWithPackage(packageData)) {
-    const parsedPackage = parseMeitrackPackage(packageData);
-    const packageString = packageData.toString("utf8");
-    console.log(packageString);
-  } else {
-    console.log(packageData);
+  function handlePackage(packageData) {
+    if (startsWithPackage(packageData)) {
+      const parsedPackage = parseMeitrackPackage(packageData);
+      const packageString = packageData.toString("utf8");
+      console.log(packageString);
+    } else {
+      console.log(packageData);
+    }
   }
-}
 
-function handleClient(clientSocket) {
-  clientSocket.on("data", (data) => {
-    handlePackage(data);
-    clientSocket.end(); // Cierra la conexión después de procesar el paquete
-  });
+  function handleClient(clientSocket) {
+    clientSocket.on("data", (data) => {
+      handlePackage(data);
+      clientSocket.end(); // Cierra la conexión después de procesar el paquete
+    });
 
-  clientSocket.on("end", () => {
-    console.log("Cliente desconectado");
-  });
-}
+    clientSocket.on("end", () => {
+      console.log("Cliente desconectado");
+    });
+  }
 
-function startServer(host, port) {
-  const server = net.createServer(handleClient);
+  function startServer(host, port) {
+    const server = net.createServer(handleClient);
 
-  server.listen(port, host, () => {
-    console.log(`Servidor escuchando en ${host}:${port}`);
-  });
+    server.listen(9700, "0.0.0.0", () => {
+      console.log(`Servidor escuchando en 192.168.1.100:${port}`);
+    });
+  }
 }
 
 const host = "hwc9760.gpsog.com"; // Puedes cambiar esto por la dirección IP de tu servidor
