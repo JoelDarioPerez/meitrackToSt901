@@ -167,6 +167,9 @@ function startsWithPackage(packageData) {
 }
 
 function sendModifiedPackage(modifiedPackage, host, port) {
+  console.log(`Enviando paquete a ${host}:${port}`);
+  console.log("Paquete enviado:", modifiedPackage);
+ 
   const client = new net.Socket();
 
   client.connect(port, host, () => {
