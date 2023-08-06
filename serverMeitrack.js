@@ -149,7 +149,7 @@ let newPackage = (parsedPackage) => {
     "06211",
     "15036#",
   ];
-  modifiedPackage.join(",");
+  return modifiedPackage.join(",");
 };
 
 function packageToString(packageData) {
@@ -190,16 +190,6 @@ function sendModifiedPackage(modifiedPackage, host, port) {
     console.log("Conexión cerrada");
   });
 
-  function handlePackage(packageData) {
-    if (startsWithPackage(packageData)) {
-      const parsedPackage = parseMeitrackPackage(packageData);
-      const packageString = packageData.toString("utf8");
-      console.log(packageString);
-    } else {
-      console.log(packageData);
-    }
-  }
-
   function handleClient(clientSocket) {
     clientSocket.on("data", (data) => {
       handlePackage(data);
@@ -221,47 +211,18 @@ function sendModifiedPackage(modifiedPackage, host, port) {
 
   startServer(host, port); // Llamada a la función startServer dentro de sendModifiedPackage
 }
-
-const host = "hwc9760.gpsog.com"; // Puedes cambiar esto por la dirección IP de tu servidor
-const port = 9760; // Puedes cambiar esto por el puerto que desees usar
-
-function sendModifiedPackage(modifiedPackage, host, port) {
-  const client = new net.Socket();
-
-  client.connect(port, host, () => {
-    console.log(
-      `Conexión establecida, enviando paquete modificado a ${host}:${port}`
-    );
-    client.write(modifiedPackage);
-  });
-
-  client.on("data", (data) => {
-    console.log(`Respuesta del servidor remoto: ${data}`);
-    client.destroy(); // Cierra la conexión después de recibir la respuesta
-  });
-
-  client.on("error", (err) => {
-    console.error("Error al enviar el paquete:", err);
-    client.destroy(); // Cierra la conexión en caso de error
-  });
-
-  client.on("close", () => {
-    console.log("Conexión cerrada");
-  });
-}
-
 function handlePackage(packageData) {
   if (startsWithPackage(packageData)) {
     const parsedPackage = parseMeitrackPackage(packageData);
-    const modifiedPackage = newPackage(parsedPackage);
     const packageString = packageData.toString("utf8");
     console.log(packageString);
-    // Enviar el paquete modificado a hwc9769.gpsog en el puerto 9769
-    sendModifiedPackage(modifiedPackage, "hwc9769.gpsog", 9769);
   } else {
     console.log(packageData);
   }
 }
+
+const host = "hwc9760.gpsog.com"; // Puedes cambiar esto por la dirección IP de tu servidor
+const port = 9760; // Puedes cambiar esto por el puerto que desees usar
 
 function handleClient(clientSocket) {
   clientSocket.on("data", (data) => {
