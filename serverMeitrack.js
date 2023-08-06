@@ -1,5 +1,4 @@
 const net = require("net");
-const { spawn } = require("child_process");
 
 function parseMeitrackPackage(packageData) {
   const fields = packageData.toString("utf8").split(",");
