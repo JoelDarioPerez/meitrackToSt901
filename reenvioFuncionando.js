@@ -21,16 +21,23 @@ newPackage = (data) => {
     let GPSStatus = divided[7];
     let lat = divided[4];
 
-    const getACCStatusString = (data) => {
-      let divided = data.split(",");
-      let accStatus = divided[17];
+    let accStatus = divided[17];
+   
 
-      if (accStatus === "0000") {
-        return "FFFFBBFF"; // ACC apagado
-      } else if (accStatus === "0400") {
-        return "FFFFBBFF"; // ACC encendido
-      } else {
-        return "Estado del ACC desconocido";
+      function analyzeMeitrackInputs(accStatus) {
+        
+        const binaryStatus = parseInt(accStatus, 16)
+          .toString(2)
+          .padStart(16, "0");
+        const activeInputs = countActiveInputs(binaryStatus);
+  
+        if (activeInputs === 0) {
+          return "Battery removed";
+        } else if (activeInputs === 2) {
+          return "ACC ON";
+        } else {
+          return "Other states";
+        }
       }
     };
 
@@ -45,8 +52,10 @@ newPackage = (data) => {
       // Obtener la dirección (N o S).
       let direction = lat >= 0 ? "N" : "S";
 
-      // Devolver la latitud en el formato "DDMM.MMMM".
-      return `${degrees.toString().padStart(2, "0")}${minutes.toFixed(4)}`;
+      // Devolver la latitud en el formato "DDFF.FFFF".
+      return `${degrees.toString().padStart(2, "0")}${minutes
+        .toFixed(4)
+        .padStart(7, "0")}${direction}`;
     }
 
     let long = divided[5];
@@ -105,8 +114,6 @@ newPackage = (data) => {
     let longitud = convertLongitude(Math.abs(long)); // Quitamos el signo negativo
     let fecha = date(fechaHora);
 
-    let accStatus = getACCStatusString(data); // Obtener el estado del ACC
-
     let SendPackage = [
       "*HQ",
       imei,
@@ -131,8 +138,8 @@ newPackage = (data) => {
 
     // Devolver el paquete modificado en formato string
     return SendPackage.join(",");
-  } else return data;
-};
+  } else return console.log("Error" + data);
+
 
 // Función para enviar los datos a través de netcat
 function sendViaNetcat(data) {
