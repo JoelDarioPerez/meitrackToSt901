@@ -2,7 +2,7 @@ const net = require("net");
 const { spawn } = require("child_process");
 
 function parseMeitrackPackage(packageData) {
-  const fields = packageData.split(",");
+  const fields = packageData.toString("utf8").split(",");
 
   const obj = {
     header: fields[0],
@@ -38,6 +38,13 @@ function packageToString(packageData) {
   const packageString = packageData.toString("utf8");
 
   return packageString;
+}
+function startsWithPackage(packageData) {
+  // Convierte el buffer a un string utilizando la codificación UTF-8
+  const packageString = packageData.toString("utf8");
+
+  // Verifica si el string comienza con "$$"
+  return packageString.indexOf("$$") === 0;
 }
 let newPackage = (parsedPackage) => {
   if (parsedPackage.imei === "013227009650882") {
@@ -140,36 +147,41 @@ let newPackage = (parsedPackage) => {
     analyzeMeitrackInputs(parsedPackage),
     "722",
     "310",
+
     "06211",
     "15036#",
   ];
   return SendPackage.join(",");
 };
-function sendModifiedPackage(modifiedPackage) {
-  const serverAddress = "hwc9760.gpsog.com";
-  const serverPort = 9760;
+const net = require("net");
 
-  const nc = spawn("nc", [serverAddress, serverPort]);
-  nc.stdin.write(modifiedPackage);
-  nc.stdin.end();
+function sendModifiedPackage(modifiedPackage, host, port) {
+  const client = new net.Socket();
 
-  nc.stdout.on("data", (data) => {
+  client.connect(port, host, () => {
+    console.log("Conexión establecida, enviando paquete modificado...");
+    client.write(modifiedPackage);
+  });
+
+  client.on("data", (data) => {
     console.log(`Respuesta del servidor: ${data}`);
+    client.destroy(); // Cierra la conexión después de recibir la respuesta
   });
 
-  nc.stderr.on("data", (data) => {
-    console.error(`Error: ${data}`);
+  client.on("error", (err) => {
+    console.error("Error al enviar el paquete:", err);
+    client.destroy(); // Cierra la conexión en caso de error
   });
 
-  nc.on("close", (code) => {
-    console.log(`Conexión cerrada con código ${code}`);
+  client.on("close", () => {
+    console.log("Conexión cerrada");
   });
 }
 
 function handlePackage(packageData) {
-  if (packageData.startsWith("$$")) {
+  if (startsWithPackage(packageData)) {
     const parsedPackage = parseMeitrackPackage(packageData);
-    const packageString = packageToString(packageData);
+    const packageString = packageData.toString("utf8");
     console.log(packageString);
   } else {
     console.log(packageData);
