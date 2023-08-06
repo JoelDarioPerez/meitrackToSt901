@@ -1,3 +1,4 @@
+const net = require("net");
 function parseMeitrackPackage(packageData) {
   const fields = packageData.toString("utf8").split(",");
 
@@ -150,7 +151,6 @@ let newPackage = (parsedPackage) => {
   ];
   return SendPackage.join(",");
 };
-const net = require("net");
 
 function sendModifiedPackage(modifiedPackage, host, port) {
   const client = new net.Socket();
@@ -200,8 +200,8 @@ function sendModifiedPackage(modifiedPackage, host, port) {
   function startServer(host, port) {
     const server = net.createServer(handleClient);
 
-    server.listen(9700, "0.0.0.0", () => {
-      console.log(`Servidor escuchando en 192.168.1.100:${port}`);
+    server.listen(port, host, () => {
+      console.log(`Servidor escuchando en ${host}:${port}`);
     });
   }
 }
