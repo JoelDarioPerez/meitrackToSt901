@@ -164,13 +164,11 @@ function sendModifiedPackage(modifiedPackage) {
 }
 
 function handlePackage(packageData) {
-  if (packageData.startsWith("$$")) {
+  if (typeof packageData === "string" && packageData.startsWith("$$")) {
     const parsedPackage = parseMeitrackPackage(packageData);
-    const modifiedPackage = newPackage(parsedPackage);
-    console.log(modifiedPackage);
-    sendModifiedPackage(modifiedPackage);
+    console.log(newPackage(parsedPackage));
   } else {
-    console.log("Paquete no válido:", packageData);
+    console.log(packageData);
   }
 }
 
