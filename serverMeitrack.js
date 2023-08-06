@@ -1,5 +1,3 @@
-const net = require("net");
-
 function parseMeitrackPackage(packageData) {
   const fields = packageData.toString("utf8").split(",");
 
