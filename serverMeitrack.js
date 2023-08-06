@@ -1,8 +1,6 @@
 const net = require("net");
 const { spawn } = require("child_process");
 
-const packageData =
-  "$$X156,013227008013553,AAA,31,-32.872680,-68.771830,230804171923,A,7,26,0,81,1,684,12394194,31269673,722|310|1849|89D3,0200,0005|0005|0000|0964|0000,,,1,0000*2A";
 
 function parseMeitrackPackage(packageData) {
   const fields = packageData.split(",");
