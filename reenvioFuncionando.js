@@ -25,11 +25,11 @@ const newPackage = (data) => {
       let accStatus = divided[17];
 
       if (accStatus === "0000") {
-        return "FFFFBBFF"; // ACC apagado
-      } else if (accStatus === "0400") {
-        return "FFFF9FFF"; // ACC encendido
-      } else {
-        return "Estado del ACC desconocido";
+        return "FFFFBFFF"; // Bateria desconectada
+      } else if (activeInputs === 2) {
+        return "FFFF9DFF"; // Acc on
+      } else if (activeInputs === 1) {
+        return "FFFF9FFF"; // Otro estado, debes definirlo aquí según la descripción previa
       }
     };
 
@@ -55,16 +55,16 @@ const newPackage = (data) => {
 
       // Asegurarse de que la longitud esté en el rango válido (-180 a 180).
       if (longitude < -180 || longitude > 180) {
-          throw new Error("La longitud debe estar en el rango de -180 a 180.");
+        throw new Error("La longitud debe estar en el rango de -180 a 180.");
       }
-  
+
       // Obtener los grados y minutos.
       let degrees = Math.floor(Math.abs(longitude));
       let minutes = (Math.abs(longitude) - degrees) * 60;
-  
+
       // Formatear los minutos con cuatro dígitos después del punto decimal.
       let formattedMinutes = minutes.toFixed(4).padStart(9, "0");
-  
+
       // Devolver la longitud en el formato "DDDFF.FFFF".
       return `${degrees.toString().padStart(3, "0")}${formattedMinutes}`;
     }
