@@ -20,18 +20,19 @@ const newPackage = (data) => {
     let GPSStatus = divided[7];
     let lat = divided[4];
 
-    const getACCStatusString = (paquete) => {
+    const getACCStatusString = (data) => {
       let divided = data.split(",");
       let accStatus = divided[17];
-
+    
       if (accStatus === "0000") {
         return "FFFFBFFF"; // Bateria desconectada
-      } else if (activeInputs === 2) {
+      } else if (accStatus === "0002") {
         return "FFFF9DFF"; // Acc on
-      } else if (activeInputs === 1) {
-        return "FFFF9FFF"; // Otro estado, debes definirlo aquí según la descripción previa
+      } else if (accStatus === "0001") {
+        return "FFFF9FFF"; // Acc off
       }
     };
+    
 
     function convertLatitude(lat) {
       // Convertir la latitud a un número decimal.
