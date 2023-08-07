@@ -23,7 +23,7 @@ const newPackage = (data) => {
     const getACCStatusString = (data) => {
       let divided = data.split(",");
       let accStatus = divided[17];
-    
+
       if (accStatus === "0000") {
         return "FFFFBFFF"; // Bateria desconectada
       } else if (accStatus === "0002") {
@@ -32,7 +32,6 @@ const newPackage = (data) => {
         return "FFFF9FFF"; // Acc off
       }
     };
-    
 
     function convertLatitude(lat) {
       // Convertir la latitud a un número decimal.
@@ -96,7 +95,12 @@ const newPackage = (data) => {
     let DireccionLong = long >= 0 ? "E" : "W";
     let Hora = time(fechaHora);
     let Velocidad = convertKmHToKnots(vel);
-    let imei = "013226004207938";
+    let imei = divided[1];
+    imeiChange = () => {
+      if (imei === "013227009650882") {
+        return "013226004207938";
+      } else return imei;
+    };
     let rumbo = divided[11];
     let latitud = convertLatitude(Math.abs(lat)); // Quitamos el signo negativo
     let longitud = convertLongitude(Math.abs(long)); // Quitamos el signo negativo
