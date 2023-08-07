@@ -96,7 +96,7 @@ const newPackage = (data) => {
     let Hora = time(fechaHora);
     let Velocidad = convertKmHToKnots(vel);
     let imei = divided[1];
-    imeiChange = () => {
+    imeiChange = (imei) => {
       if (imei === "013227009650882") {
         return "013226004207938";
       } else return imei;
