@@ -44,8 +44,11 @@ const newPackage = (data) => {
       // Obtener la dirección (N o S).
       let direction = lat >= 0 ? "N" : "S";
 
+      // Formatear los minutos con cuatro dígitos antes del punto decimal y cuatro después.
+      let formattedMinutes = minutes.toFixed(4).padStart(8, "0");
+
       // Devolver la latitud en el formato "DDMM.MMMM".
-      return `${degrees.toString().padStart(2, "0")}${minutes.toFixed(4)}`;
+      return `${degrees.toString().padStart(2, "0")}${formattedMinutes}`;
     }
 
     let long = divided[5];
