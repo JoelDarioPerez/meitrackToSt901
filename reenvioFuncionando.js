@@ -22,14 +22,24 @@ const newPackage = (data) => {
 
     const getACCStatusString = (data) => {
       let divided = data.split(",");
-      let accStatus = divided[17];
+      let inputStatusHex = divided[17]; // Assuming the input status value is provided in hexadecimal format
 
-      if (accStatus === "0000") {
-        return "FFFFBFFF"; // Bateria desconectada
-      } else if (accStatus === "0002") {
-        return "FFFF9DFF"; // Acc on
-      } else if (accStatus === "0001") {
-        return "FFFF9FFF"; // Acc off
+      // Convert hexadecimal input status to binary
+      let inputStatusBinary = parseInt(inputStatusHex, 16)
+        .toString(2)
+        .padStart(16, "0");
+
+      // Count the number of active inputs (bits with value 1)
+      let activeInputs = inputStatusBinary
+        .split("")
+        .filter((bit) => bit === "1").length;
+
+      if (activeInputs === 0) {
+        return "FFFFBFFF"; // No active inputs
+      } else if (activeInputs === 1) {
+        return "FFFF9FFF"; // 1 active input
+      } else if (activeInputs >= 2) {
+        return "FFFF9DFF"; // 2 or more active inputs
       }
     };
 
