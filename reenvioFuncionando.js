@@ -51,7 +51,7 @@ const newPackage = (data) => {
     let long = divided[5];
 
     function convertLongitude(long) {
-      longitude = parseFloat(long);
+      let longitude = parseFloat(long);
 
       // Asegurarse de que la longitud esté en el rango válido (-180 a 180).
       if (longitude < -180 || longitude > 180) {
