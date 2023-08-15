@@ -1,17 +1,18 @@
-const net = require("net");
+const net = require('net');
 
-const server = net.createServer((socket) => {
-  console.log("Cliente conectado.");
+const server = net.createServer(socket => {
+  console.log('Cliente conectado.');
 
-  socket.on("data", (data) => {
-    console.log(`Datos recibidos: ${data}`);
+  socket.on('data', data => {
+    const hexData = data.toString('hex');
+    console.log(`Datos recibidos en formato hexadecimal: ${hexData}`);
   });
 
-  socket.on("end", () => {
-    console.log("Cliente desconectado.");
+  socket.on('end', () => {
+    console.log('Cliente desconectado.');
   });
 
-  socket.on("error", (error) => {
+  socket.on('error', error => {
     console.error(`Error: ${error}`);
   });
 });
