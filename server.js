@@ -1,23 +1,30 @@
 const net = require('net');
 
+// Dirección IP y puerto del servidor al que reenviar los datos
+const remoteServerHost = 'hwc9760.gpsog.com';
+const remoteServerPort = 9760;
+
 const server = net.createServer(socket => {
   console.log('Cliente conectado.');
 
-  socket.on('data', data => {
-    const receivedData = data.toString();
-    console.log(`Datos recibidos: ${receivedData}`);
+  // Crear una conexión con el servidor remoto
+  const remoteSocket = net.createConnection(remoteServerPort, remoteServerHost, () => {
+    console.log('Conectado al servidor remoto.');
+  });
 
-    if (receivedData.startsWith('#')) {
-      // Enviar respuesta "LOAD" al cliente
-      const response = 'LOAD\r\n';
-      socket.write(response, 'utf-8', () => {
-        console.log(`Respuesta enviada: ${response}`);
-      });
-    }
+  socket.on('data', data => {
+    const decodedData = data.toString();
+    console.log(`Datos recibidos: ${decodedData}`);
+
+    // Reenviar los datos al servidor remoto
+    remoteSocket.write(data);
   });
 
   socket.on('end', () => {
     console.log('Cliente desconectado.');
+
+    // Cerrar la conexión con el servidor remoto cuando el cliente se desconecta
+    remoteSocket.end();
   });
 
   socket.on('error', error => {
