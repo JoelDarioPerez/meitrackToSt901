@@ -9,19 +9,25 @@ const server = net.createServer((socket) => {
     buffer = Buffer.concat([buffer, data]); // Agregar datos al buffer
 
     // Verificar si se ha recibido al menos el tamaño del encabezado
-    if (buffer.length >= 7) {
-      const packageLength = buffer.readUInt16BE(1); // Leer longitud del paquete
-      if (buffer.length >= packageLength) {
-        const commandWord = buffer.readUInt16BE(3); // Leer palabra de comando
-        const terminalID = buffer.readUInt32BE(5); // Leer ID de terminal
+    socket.on("data", (data) => {
+      buffer = Buffer.concat([buffer, data]); // Agregar datos al buffer
 
-        // Aquí puedes realizar las acciones según la palabra de comando y otros datos
-        // ...
+      // Verificar si se ha recibido al menos el tamaño del encabezado
+      if (buffer.length >= 7) {
+        const packageLength = buffer.readUInt16BE(1); // Leer longitud del paquete
+        if (buffer.length >= packageLength) {
+          const receivedData = buffer.slice(0, packageLength);
 
-        // Borrar los datos procesados del buffer
-        buffer = buffer.slice(packageLength);
+          console.log(
+            "Datos completos recibidos en formato HEX:",
+            receivedData.toString("hex")
+          );
+
+          // Borrar los datos procesados del buffer
+          buffer = buffer.slice(packageLength);
+        }
       }
-    }
+    });
   });
 
   socket.on("end", () => {
