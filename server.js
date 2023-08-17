@@ -1,39 +1,40 @@
 const net = require('net');
 
-// Dirección IP y puerto del servidor al que reenviar los datos
-const remoteServerHost = 'hwc9760.gpsog.com';
-const remoteServerPort = 9760;
-
 const server = net.createServer(socket => {
   console.log('Cliente conectado.');
 
-  // Crear una conexión con el servidor remoto
-  const remoteSocket = net.createConnection(remoteServerPort, remoteServerHost, () => {
-    console.log('Conectado al servidor remoto.');
-  });
+  let buffer = Buffer.alloc(0); // Buffer para almacenar los datos entrantes
 
   socket.on('data', data => {
-    const decodedData = data.toString();
-    console.log(`Datos recibidos: ${decodedData}`);
+    buffer = Buffer.concat([buffer, data]); // Agregar datos al buffer
 
-    // Reenviar los datos al servidor remoto
-    remoteSocket.write(data);
+    // Verificar si se ha recibido al menos el tamaño del encabezado
+    if (buffer.length >= 7) {
+      const packageLength = buffer.readUInt16BE(1); // Leer longitud del paquete
+      if (buffer.length >= packageLength) {
+        const commandWord = buffer.readUInt16BE(3); // Leer palabra de comando
+        const terminalID = buffer.readUInt32BE(5); // Leer ID de terminal
+
+        // Aquí puedes realizar las acciones según la palabra de comando y otros datos
+        // ...
+        
+        // Borrar los datos procesados del buffer
+        buffer = buffer.slice(packageLength);
+      }
+    }
   });
 
   socket.on('end', () => {
     console.log('Cliente desconectado.');
-
-    // Cerrar la conexión con el servidor remoto cuando el cliente se desconecta
-    remoteSocket.end();
   });
 
-  socket.on('error', error => {
-    console.error(`Error: ${error}`);
+  socket.on('error', err => {
+    console.error('Error en la conexión:', err);
   });
 });
 
-const port = 8000;
+const PORT = 3000;
 
-server.listen(port, () => {
-  console.log(`Servidor TCP/IP escuchando en el puerto ${port}`);
+server.listen(PORT, () => {
+  console.log(`Servidor TCP escuchando en el puerto ${PORT}`);
 });
