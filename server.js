@@ -1,11 +1,11 @@
-const net = require('net');
+const net = require("net");
 
-const server = net.createServer(socket => {
-  console.log('Cliente conectado.');
+const server = net.createServer((socket) => {
+  console.log("Cliente conectado.");
 
   let buffer = Buffer.alloc(0); // Buffer para almacenar los datos entrantes
 
-  socket.on('data', data => {
+  socket.on("data", (data) => {
     buffer = Buffer.concat([buffer, data]); // Agregar datos al buffer
 
     // Verificar si se ha recibido al menos el tamaño del encabezado
@@ -17,23 +17,23 @@ const server = net.createServer(socket => {
 
         // Aquí puedes realizar las acciones según la palabra de comando y otros datos
         // ...
-        
+
         // Borrar los datos procesados del buffer
         buffer = buffer.slice(packageLength);
       }
     }
   });
 
-  socket.on('end', () => {
-    console.log('Cliente desconectado.');
+  socket.on("end", () => {
+    console.log("Cliente desconectado.");
   });
 
-  socket.on('error', err => {
-    console.error('Error en la conexión:', err);
+  socket.on("error", (err) => {
+    console.error("Error en la conexión:", err);
   });
 });
 
-const PORT = 3000;
+const PORT = 8000;
 
 server.listen(PORT, () => {
   console.log(`Servidor TCP escuchando en el puerto ${PORT}`);
