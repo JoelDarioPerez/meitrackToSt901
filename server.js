@@ -1,23 +1,21 @@
-const net = require('net');
+const http = require('http');
 
-const server = net.createServer(socket => {
-  console.log('Cliente conectado.');
+const server = http.createServer((req, res) => {
+  let data = '';
 
-  socket.on('data', data => {
-    console.log('Datos recibidos en formato HEX:', data.toString('hex'));
+  req.on('data', chunk => {
+    data += chunk;
   });
 
-  socket.on('end', () => {
-    console.log('Cliente desconectado.');
-  });
-
-  socket.on('error', err => {
-    console.error('Error en la conexión:', err);
+  req.on('end', () => {
+    console.log('Paquete recibido:', data);
+    res.writeHead(200, {'Content-Type': 'text/plain'});
+    res.end('Paquete recibido exitosamente\n');
   });
 });
 
 const PORT = 3000;
 
 server.listen(PORT, () => {
-  console.log(`Servidor TCP escuchando en el puerto ${PORT}`);
+  console.log(`Servidor escuchando en el puerto ${PORT}`);
 });
