@@ -1,4 +1,4 @@
-function parseST908Package(packageData) {
+/* function parseST908Package(packageData) {
   const obj = {};
 
   // ID del terminal (4 bytes)
@@ -30,3 +30,26 @@ const packageData =
   "292980002846914885230817143542832545138684558300000000ffff000082fc0000001e780a08000034e70d";
 const parsedData = parseST908Package(packageData);
 console.log(parsedData);
+ */
+
+const http = require("http");
+
+const server = http.createServer((req, res) => {
+  let data = "";
+
+  req.on("data", (chunk) => {
+    data += chunk;
+  });
+
+  req.on("end", () => {
+    console.log("Paquete recibido:", data);
+    res.writeHead(200, { "Content-Type": "text/plain" });
+    res.end("Paquete recibido exitosamente\n");
+  });
+});
+
+const PORT = 3000;
+
+server.listen(PORT, () => {
+  console.log(`Servidor escuchando en el puerto ${PORT}`);
+});
