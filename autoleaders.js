@@ -31,47 +31,18 @@ const packageData =
 const parsedData = parseST908Package(packageData);
 console.log(parsedData);
  */
+const net = require('net');
 
-const net = require("net");
-
-const server = net.createServer((socket) => {
+const server = net.createServer(socket => {
   let buffer = Buffer.alloc(0);
 
-  socket.on("data", (data) => {
+  socket.on('data', data => {
     buffer = Buffer.concat([buffer, data]);
 
     while (buffer.length >= 16) {
-      const header = buffer.readUInt16BE(0);
-      const command = buffer.readUInt8(2);
-      const packageLength = buffer.readUInt16BE(3);
-      const terminalID = buffer.readUInt32BE(5);
-      const parameterLength = packageLength - 11;
-      const parameters = buffer.slice(9, 9 + parameterLength);
-      const checkCode = buffer.readUInt8(9 + parameterLength);
-      const trailer = buffer.readUInt8(10 + parameterLength);
+      console.log('Package received (HEX):', buffer.toString('hex'));
 
-      console.log("Package received:");
-      console.log("Header:", header.toString(16));
-      console.log("Command:", command);
-      console.log("Package Length:", packageLength);
-      console.log("Terminal ID:", terminalID);
-      console.log("Parameters:", parameters);
-      console.log("Check Code:", checkCode);
-      console.log("Trailer:", trailer.toString(16));
-
-      // Parsing Location Data
-      const longitude = parameters.readFloatBE(0);
-      const latitude = parameters.readFloatBE(4);
-      const altitude = parameters.readFloatBE(8);
-      const speed = parameters.readFloatBE(12);
-
-      console.log("Location Data:");
-      console.log("Longitude:", longitude);
-      console.log("Latitude:", latitude);
-      console.log("Altitude:", altitude);
-      console.log("Speed:", speed);
-
-      buffer = buffer.slice(packageLength);
+      buffer = buffer.slice(16);
     }
   });
 });
