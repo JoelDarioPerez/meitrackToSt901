@@ -1,42 +1,45 @@
-function parseGPSData(packet) {
-  const header = packet.slice(0, 4);
-  const command = packet.slice(4, 6);
-  const packageLength = packet.slice(6, 10);
-  const terminalID = packet.slice(10, 18);
+function parsePackage(package) {
+  const header = package.substring(0, 4);
+  const command = package.substring(4, 8);
+  const packageLength = package.substring(8, 10);
+  const terminalID = package.substring(10, 18);
+  const date = package.substring(18, 24);
+  const time = package.substring(24, 30);
 
-  // Detalle de los parámetros
-  const time = packet.slice(18, 30);
-  const latitude = packet.slice(30, 38);
-  const longitude = packet.slice(38, 46);
-  const speedDirection = packet.slice(46, 50);
-  const gpsAntenna = packet.slice(49, 50);
-  const fuel = packet.slice(46, 52);
-  const vehicleState = packet.slice(52, 56);
-
-  const verificationCode = packet.slice(packet.length - 10, packet.length - 8);
-  const trailer = packet.slice(packet.length - 8);
+  const latitudeOrientation = package.substring(30, 31);
+  const latitudeValue = package.substring(31, 38);
+  const longitudeOrientation = package.substring(38, 39);
+  const longitudeValue = package.substring(39, 46);
+  const speed = package.substring(46, 50);
+  const direction = package.substring(50, 53);
+  const gpsAntenna = package.substring(53, 54);
+  const fuel = package.substring(50, 54);
+  const vehicleState = package.substring(67, 75);
+  const checkCode = package.substring(75, 77);
+  const packageTrailer = package.substring(77);
 
   return {
     header,
     command,
     packageLength,
     terminalID,
-    params: {
-      time,
-      latitude,
-      longitude,
-      speedDirection,
-      gpsAntenna,
-      fuel,
-      vehicleState,
-    },
-    verificationCode,
-    trailer,
+    date,
+    time,
+    latitudeOrientation,
+    latitudeValue,
+    longitudeOrientation,
+    longitudeValue,
+    speed,
+    direction,
+    gpsAntenna,
+    fuel,
+    vehicleState,
+    checkCode,
+    packageTrailer,
   };
 }
 
-// Ejemplo de uso
-const receivedPacket =
-  "292980002846914885230817143212832545118684558300000000ffff000082fc0000001e780a08000034b20d";
-const parsedData = parseGPSData(receivedPacket);
+const receivedPackage =
+  "292980002846914885230824135438832540898681954100000184ffff000002fc0000001e780b0a00003456";
+const parsedData = parsePackage(receivedPackage);
 console.log(parsedData);
