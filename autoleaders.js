@@ -1,54 +1,42 @@
-/* function parseST908Package(packageData) {
-  const obj = {};
+function parseGPSData(packet) {
+  const header = packet.slice(0, 4);
+  const command = packet.slice(4, 6);
+  const packageLength = packet.slice(6, 10);
+  const terminalID = packet.slice(10, 18);
 
-  // ID del terminal (4 bytes)
-  obj.terminalId = parseInt(packageData.substr(10, 8));
+  // Detalle de los parámetros
+  const time = packet.slice(18, 30);
+  const latitude = packet.slice(30, 38);
+  const longitude = packet.slice(38, 46);
+  const speedDirection = packet.slice(46, 50);
+  const gpsAntenna = packet.slice(49, 50);
+  const fuel = packet.slice(46, 52);
+  const vehicleState = packet.slice(52, 56);
 
-  // Latitud (4 bytes)
-  obj.latitude = parseFloat(packageData.substr(31, 7));
+  const verificationCode = packet.slice(packet.length - 10, packet.length - 8);
+  const trailer = packet.slice(packet.length - 8);
 
-  // Longitud (4 bytes)
-  obj.longitude = parseFloat(packageData.substr(39, 7));
-
-  obj.time = parseInt(packageData.substr(18, 12));
-
-  // Velocidad (2 bytes)
-  obj.speed = parseInt(packageData.substr(50, 4));
-
-  // Dirección (2 bytes)
-  obj.direction = parseInt(packageData.substr(52, 3));
-  obj.acc = parseInt(packageData.substr(76, 8), 8);
-  // Estado del ACC y Estado de la batería (1 byte)
-  const vehicleState = parseInt(packageData.substr(54, 2), 16);
-  obj.accStatus = (vehicleState & 0b00000001) === 0 ? "Apagado" : "Encendido";
-  obj.batteryStatus = (vehicleState & 0b00000010) === 0 ? "Normal" : "Activada";
-
-  return obj;
+  return {
+    header,
+    command,
+    packageLength,
+    terminalID,
+    params: {
+      time,
+      latitude,
+      longitude,
+      speedDirection,
+      gpsAntenna,
+      fuel,
+      vehicleState,
+    },
+    verificationCode,
+    trailer,
+  };
 }
 
-const packageData =
-  "292980002846914885230817143542832545138684558300000000ffff000082fc0000001e780a08000034e70d";
-const parsedData = parseST908Package(packageData);
+// Ejemplo de uso
+const receivedPacket =
+  "292980002846914885230817143212832545118684558300000000ffff000082fc0000001e780a08000034b20d";
+const parsedData = parseGPSData(receivedPacket);
 console.log(parsedData);
- */
-const net = require('net');
-
-const server = net.createServer(socket => {
-  let buffer = Buffer.alloc(0);
-
-  socket.on('data', data => {
-    buffer = Buffer.concat([buffer, data]);
-
-    while (buffer.length >= 16) {
-      console.log('Package received (HEX):', buffer.toString('hex'));
-
-      buffer = buffer.slice(16);
-    }
-  });
-});
-
-const PORT = 3000;
-
-server.listen(PORT, () => {
-  console.log(`TCP/IP server listening on port ${PORT}`);
-});
