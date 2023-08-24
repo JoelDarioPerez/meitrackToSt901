@@ -7,7 +7,7 @@ const server = net.createServer((socket) => {
   const pipePath = "\\\\.\\pipe\\mypipe"; // Ruta del pipe
   const pipeStream = fs.createWriteStream(pipePath);
 
-  const destinationHost = "119.147.024.211";
+  const destinationHost = "45.112.204.217";
   const destinationPort = 7000;
   const destinationSocket = new net.Socket();
 
@@ -31,7 +31,7 @@ const server = net.createServer((socket) => {
     destinationSocket.write(data);
 
     // Escribir el paquete en el pipe
-    pipeStream.write(hexData + "\n", "utf-8", (err) => {
+    pipeStream.write(hexData, (err) => {
       if (err) {
         console.error("Error al escribir en el pipe:", err);
       } else {
