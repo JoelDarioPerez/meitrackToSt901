@@ -2,9 +2,7 @@ const net = require("net");
 const https = require("https");
 const fs = require("fs");
 require("dotenv").config();
-data =
-  "$$H157,013227009650882,AAA,33,-32.722396,-61.865563,230823121840,A,9,15,82,136,1,82,26326520,29159639,722|310|04DA|53D3,0000,0001|0002|0000|0A4B|0883,,,1,0000*7D";
-// Función para modificar el paquete recibido
+
 newPackage = (data) => {
   // Aquí va tu lógica para procesar los datos recibidos
   if (data[0][0] === "$") {
