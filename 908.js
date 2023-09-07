@@ -15,24 +15,24 @@ let whdProtocol = (data) => {
   package.latDirection = data.slice(37, 38);
 
   let latitud = () => {
-    let latitud = data.slice(31, 38);
+    let latitud = data.slice(31, 38); // La latitud viene en este formato GGMMSS
     let grados = parseFloat(data.slice(31, 33));
     let minutos = parseFloat(data.slice(33, 35)) * 100;
     let cents = parseFloat(data.slice(35, 37));
     let gradosDec = (minutos + cents)/60;
     let FFfff= gradosDec.padStart(2,0)
-    return `${grados.padStart(2,0)}${(gradosDec).toFixed(4)}`;
+    return `${grados.padStart(2,0)}${(gradosDec).toFixed(4)}`; //Necesito que quede GGMM.mmmm 
   };
   package.latitude = latitud(data);
   package.longDirection = data.slice(38, 39);
 
   let longitud = () => {
-    let longitud = data.slice(39, 46);
+    let longitud = data.slice(39, 46); // Longitud viene GGMMSS
     let grados = parseFloat(data.slice(39, 41));
     let minutos = parseFloat(data.slice(41, 43));
     let minCents = parseFloat(data.slice(43, 46));
 
-    return `${grados}${minutos + minCents.toFixed(4)}`;
+    return `${grados}${minutos + minCents.toFixed(4)}`; //Necesito GGGMM.mmmm
   };
 
   package.longitude = longitud(data);
