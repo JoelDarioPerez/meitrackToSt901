@@ -1,3 +1,4 @@
+const handler = require("./reenvio.js");
 // Función para enviar los datos a través de netcat
 function sendViaNetcat(data) {
   const host = "hwc9760.gpsog.com";
@@ -13,6 +14,7 @@ function sendViaNetcat(data) {
   // Capturamos los datos recibidos del servidor remoto
   client.on("data", (data) => {
     console.log(`Datos recibidos del servidor remoto: ${data}`);
+    handler(data);
     // Aquí puedes realizar alguna acción con los datos recibidos si lo deseas
   });
 
@@ -39,8 +41,6 @@ function gpsTrackerServer(host, port) {
       const processedData = newPackage(data.toString());
 
       console.log(`Datos recibidos: ${data.toString()}`);
-      ;
-
       // Enviamos los datos procesados a través de netcat
       sendViaNetcat(processedData);
 
