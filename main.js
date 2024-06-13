@@ -10,7 +10,7 @@ const server = createServer((socket) => {
     const result = handler(envio);
 
     const client = new Socket();
-    client.connect(9996, "hwc9996.iopgps.com", () => {
+    client.connect(9760, "hwc9760.gpsog.com", () => {
       console.log("Conectado a hwc9996.iopgps.com:9996");
       client.write(result); // Usar client.write para enviar datos al servidor remoto
     });
