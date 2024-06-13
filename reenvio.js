@@ -30,7 +30,7 @@ function modificadorMeitrack(data) {
     };
   } catch (error) {
     console.error("Error al dividir y parsear los datos:", error);
-    return;
+    return null;
   }
 
   function convertirLatitud(latitud) {
@@ -117,7 +117,7 @@ function modificadorMeitrack(data) {
     datosMeitrack.ioPortStatusBinary = convertirIoPortStatus(datosMeitrack.ioPortStatus);
   } catch (error) {
     console.error("Error al convertir latitud, longitud o estado del puerto IO:", error);
-    return;
+    return null;
   }
 
   function convertKmhToKnots(speedKmh) {
@@ -137,7 +137,7 @@ function modificadorMeitrack(data) {
     datosMeitrack.hora = fechaFormateada.horaFormateada;
   } catch (error) {
     console.error("Error al convertir velocidad o formatear fecha:", error);
-    return;
+    return null;
   }
 
   function paqueteAutoleaders() {
@@ -164,17 +164,28 @@ function modificadorMeitrack(data) {
   }
 
   try {
-    console.log(paqueteAutoleaders());
-    return paqueteAutoleaders();
+    const paquete = paqueteAutoleaders();
+    if (paquete) {
+      console.log(paquete);
+      return paquete;
+    } else {
+      throw new Error("El paquete autoleaders es nulo o indefinido.");
+    }
   } catch (error) {
     console.error("Error al generar y retornar el paquete autoleaders:", error);
+    return null;
   }
 }
 
 export function handler(data) {
   if (data.startsWith("$$")) {
     try {
-      modificadorMeitrack(data);
+      const result = modificadorMeitrack(data);
+      if (result) {
+        console.log("Resultado válido:", result);
+      } else {
+        console.error("El resultado no es una cadena válida:", result);
+      }
     } catch (error) {
       console.log(error);
     }
