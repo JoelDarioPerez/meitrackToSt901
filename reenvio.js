@@ -171,19 +171,19 @@ function modificadorMeitrack(data) {
     console.error("Error al convertir velocidad o formatear fecha:", error);
     return null;
   }
-
-  function handler(data) {
-    if (data.startsWith("$$")) {
-      try {
-        const result = modificadorMeitrack(data);
-        console.log(result);
-        return result;
-      } catch (error) {
-        console.log(error);
-      }
-    } else {
-      console.log("No es un mensaje Meitrack:", data);
+}
+export function handler(data) {
+  if (data.startsWith("$$")) {
+    try {
+      const result = modificadorMeitrack(data);
+      console.log(result);
+      return result;
+    } catch (error) {
+      console.log(error);
     }
+  } else {
+    console.log("No es un mensaje Meitrack:", data);
   }
 }
+
 export default handler;
