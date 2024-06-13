@@ -1,6 +1,38 @@
-import handler, { handler as namedHandler } from "./reenvio.js";
+import handler from "./reenvio.js";
 
-data =
-  "$$T156,013227002709461,AAA,35,-31.522403,-68.515760,240613015057,A,11,13,0,0,0,625,31488253,18964415,722|310|1996|3B3A,0400,000D|000F|0000|0A6D|0431,,,1,0000*46";
-// También puedes usar `namedHandler` si necesitas la función nombrada
-namedHandler(data);
+const net = require('net');
+const server = net.createServer((socket) => {
+  console.log('Cliente conectado');
+  
+  socket.on('data', (data) => {
+    console.log('Datos recibidos:', data.toString());
+    const result = handler(data.toString());
+
+    const client = new net.Socket();
+    client.connect(9996, 'hwc9996.iopgps.com', () => {
+      console.log('Conectado a hwc9996.iopgps.com:9996');
+      client.write(result);
+      client.end();
+    });
+
+    client.on('close', () => {
+      console.log('Conexión al servidor remoto cerrada');
+    });
+
+    client.on('error', (err) => {
+      console.error('Error en la conexión al servidor remoto:', err);
+    });
+  });
+
+  socket.on('end', () => {
+    console.log('Cliente desconectado');
+  });
+
+  socket.on('error', (err) => {
+    console.error('Error en la conexión:', err);
+  });
+});
+
+server.listen(9700, () => {
+  console.log('Servidor TCP escuchando en el puerto 9700');
+});

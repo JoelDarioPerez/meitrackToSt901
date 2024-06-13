@@ -54,13 +54,15 @@ function modificadorMeitrack(data) {
       let binaryByte = parseInt(byte, 16).toString(2).padStart(8, "0");
       binaryRepresentation += binaryByte;
     }
-    if ((ioPortStatus[5] = "1")) {
+    if ((ioPortStatus[5] === "1")) {
       datosMeitrack.Acc = "FFFF9FFF";
-    } else if ((ioPortStatus[5] = "0")) {
+    } else if ((ioPortStatus[5] === "0")) {
       datosMeitrack.Acc = "FFFFBBFF";
-    } else if ((ioPortStatus[4] = "1")) {
+    } else if ((ioPortStatus[4] === "1")) {
       datosMeitrack.Acc = "FFFF9FFF";
-    } else "FFFFBBFF";
+    } else {
+      datosMeitrack.Acc = "FFFFBBFF";
+    }
     return binaryRepresentation;
   }
 
@@ -82,14 +84,17 @@ function modificadorMeitrack(data) {
   datosMeitrack.ioPortStatusBinary = convertirIoPortStatus(
     datosMeitrack.ioPortStatus
   );
+
   function convertKmhToKnots(speedKmh) {
     const speedKnots = speedKmh / 1.852;
     return speedKnots.toFixed(2).padStart(6, "0");
   }
+
   datosMeitrack.velocidad = convertKmhToKnots(datosMeitrack.speed);
   const fechaFormateada = formatearFecha(datosMeitrack.date);
   datosMeitrack.fecha = fechaFormateada.fechaFormateada;
   datosMeitrack.hora = fechaFormateada.horaFormateada;
+
   function paqueteAutoleaders() {
     let header = "*HQ";
     let imei = datosMeitrack.imei;
@@ -107,15 +112,17 @@ function modificadorMeitrack(data) {
     let paqueteFormateado = `${header},${imei},${version},${date},${isValid},${latitud},${longitud},${speed},${direction},${fecha},${acccStatus},${antena}`;
     return paqueteFormateado;
   }
+
   console.log(paqueteAutoleaders());
   return paqueteAutoleaders();
 }
+
 export function handler(data) {
   if (data.startsWith("$$")) {
     modificadorMeitrack(data);
-  } else console.log("No es un mensaje Meitrack:", data);
+  } else {
+    console.log("No es un mensaje Meitrack:", data);
+  }
 }
 
-export default handler
-
-
+export default handler;
