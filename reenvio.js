@@ -172,7 +172,7 @@ function modificadorMeitrack(data) {
     return null;
   }
 
-  export function handler(data) {
+  function handler(data) {
     if (data.startsWith("$$")) {
       try {
         const result = modificadorMeitrack(data);
