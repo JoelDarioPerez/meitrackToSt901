@@ -54,11 +54,11 @@ function modificadorMeitrack(data) {
       let binaryByte = parseInt(byte, 16).toString(2).padStart(8, "0");
       binaryRepresentation += binaryByte;
     }
-    if ((ioPortStatus[5] === "1")) {
+    if (ioPortStatus[5] === "1") {
       datosMeitrack.Acc = "FFFF9FFF";
-    } else if ((ioPortStatus[5] === "0")) {
+    } else if (ioPortStatus[5] === "0") {
       datosMeitrack.Acc = "FFFFBBFF";
-    } else if ((ioPortStatus[4] === "1")) {
+    } else if (ioPortStatus[4] === "1") {
       datosMeitrack.Acc = "FFFF9FFF";
     } else {
       datosMeitrack.Acc = "FFFFBBFF";
@@ -119,7 +119,11 @@ function modificadorMeitrack(data) {
 
 export function handler(data) {
   if (data.startsWith("$$")) {
-    modificadorMeitrack(data);
+    try {
+      modificadorMeitrack(data);
+    } catch (error) {
+      console.log(error);
+    }
   } else {
     console.log("No es un mensaje Meitrack:", data);
   }
