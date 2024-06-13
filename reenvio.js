@@ -113,10 +113,17 @@ function modificadorMeitrack(data) {
 
   try {
     datosMeitrack.formattedLatitude = convertirLatitud(datosMeitrack.latitude);
-    datosMeitrack.formattedLongitude = convertirLongitud(datosMeitrack.longitude);
-    datosMeitrack.ioPortStatusBinary = convertirIoPortStatus(datosMeitrack.ioPortStatus);
+    datosMeitrack.formattedLongitude = convertirLongitud(
+      datosMeitrack.longitude
+    );
+    datosMeitrack.ioPortStatusBinary = convertirIoPortStatus(
+      datosMeitrack.ioPortStatus
+    );
   } catch (error) {
-    console.error("Error al convertir latitud, longitud o estado del puerto IO:", error);
+    console.error(
+      "Error al convertir latitud, longitud o estado del puerto IO:",
+      error
+    );
     return null;
   }
 
@@ -181,11 +188,7 @@ export function handler(data) {
   if (data.startsWith("$$")) {
     try {
       const result = modificadorMeitrack(data);
-      if (result) {
-        console.log("Resultado válido:", result);
-      } else {
-        console.error("El resultado no es una cadena válida:", result);
-      }
+      console.log(result)
     } catch (error) {
       console.log(error);
     }
