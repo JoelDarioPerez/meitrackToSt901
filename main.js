@@ -8,7 +8,8 @@ const server = createServer((socket) => {
     console.log("Datos recibidos:", data.toString());
     let envio = data.toString();
     const result = handler(envio);
-
+let ip = "hwc9760.iopgps.com";
+let port = 9760
     const client = new Socket();
     client.connect(9760, "hwc9760.gpsog.com", () => {
       console.log("Conectado a hwc9996.iopgps.com:9996");
