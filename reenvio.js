@@ -54,15 +54,21 @@ function modificadorMeitrack(data) {
       let binaryByte = parseInt(byte, 16).toString(2).padStart(8, "0");
       binaryRepresentation += binaryByte;
     }
-    if (ioPortStatus[5] === "1") {
+
+    // Acceder a las posiciones específicas del binario
+    const bit5 = binaryRepresentation[10]; // Considerando que el bit 5 es el 11-1
+    const bit4 = binaryRepresentation[11]; // Considerando que el bit 4 es el 12-1
+
+    if (bit5 === "1") {
       datosMeitrack.Acc = "FFFF9FFF";
-    } else if (ioPortStatus[5] === "0") {
+    } else if (bit5 === "0") {
       datosMeitrack.Acc = "FFFFBBFF";
-    } else if (ioPortStatus[4] === "1") {
+    } else if (bit4 === "1") {
       datosMeitrack.Acc = "FFFF9FFF";
     } else {
       datosMeitrack.Acc = "FFFFBBFF";
     }
+
     return binaryRepresentation;
   }
 
@@ -81,9 +87,7 @@ function modificadorMeitrack(data) {
 
   datosMeitrack.formattedLatitude = convertirLatitud(datosMeitrack.latitude);
   datosMeitrack.formattedLongitude = convertirLongitud(datosMeitrack.longitude);
-  datosMeitrack.ioPortStatusBinary = convertirIoPortStatus(
-    datosMeitrack.ioPortStatus
-  );
+  datosMeitrack.ioPortStatusBinary = convertirIoPortStatus(datosMeitrack.ioPortStatus);
 
   function convertKmhToKnots(speedKmh) {
     const speedKnots = speedKmh / 1.852;
