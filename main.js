@@ -10,14 +10,10 @@ const server = createServer((socket) => {
     const result = handler(envio);
 
     const client = new Socket();
-    client.connect(9996, 'hwc9996.iopgps.com', () => {
+    client.connect(9996, 'hwc9996.iopgps.com'), () => {
       console.log('Conectado a hwc9996.iopgps.com:9996');
-      if (typeof result === 'string') {
-        client.write(result);
-        client.end();
-      } else {
-        console.error('El resultado no es una cadena válida:', result);
-        client.end();
+        client.send(result);
+    
       }
     });
 
@@ -37,7 +33,7 @@ const server = createServer((socket) => {
   socket.on('error', (err) => {
     console.error('Error en la conexión:', err);
   });
-});
+
 
 server.listen(9700, () => {
   console.log('Servidor TCP escuchando en el puerto 9700');

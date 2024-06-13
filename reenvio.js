@@ -142,59 +142,48 @@ function modificadorMeitrack(data) {
     const fechaFormateada = formatearFecha(datosMeitrack.date);
     datosMeitrack.fecha = fechaFormateada.fechaFormateada;
     datosMeitrack.hora = fechaFormateada.horaFormateada;
+    function paqueteAutoleaders() {
+      try {
+        let header = "*HQ";
+        let imei = datosMeitrack.imei;
+        let version = "V1";
+        let date = datosMeitrack.hora;
+        let isValid = datosMeitrack.status;
+        let latitud = datosMeitrack.formattedLatitude;
+        let longitud = datosMeitrack.formattedLongitude;
+        let speed = datosMeitrack.velocidad;
+        let direction = datosMeitrack.direction.padStart(3, "0");
+        let fecha = datosMeitrack.fecha;
+        let acccStatus = datosMeitrack.Acc;
+        let antena = "722,310,06217,35038#";
+
+        let paqueteFormateado = `${header},${imei},${version},${date},${isValid},${latitud},${longitud},${speed},${direction},${fecha},${acccStatus},${antena}`;
+        return paqueteFormateado;
+      } catch (error) {
+        console.error("Error al crear el paquete autoleaders:", error);
+        return null;
+      }
+    }
+
+    let newPackage = paqueteAutoleaders(data);
+    return newPackage;
   } catch (error) {
     console.error("Error al convertir velocidad o formatear fecha:", error);
     return null;
   }
 
-  function paqueteAutoleaders() {
-    try {
-      let header = "*HQ";
-      let imei = datosMeitrack.imei;
-      let version = "V1";
-      let date = datosMeitrack.hora;
-      let isValid = datosMeitrack.status;
-      let latitud = datosMeitrack.formattedLatitude;
-      let longitud = datosMeitrack.formattedLongitude;
-      let speed = datosMeitrack.velocidad;
-      let direction = datosMeitrack.direction.padStart(3, "0");
-      let fecha = datosMeitrack.fecha;
-      let acccStatus = datosMeitrack.Acc;
-      let antena = "722,310,06217,35038#";
-
-      let paqueteFormateado = `${header},${imei},${version},${date},${isValid},${latitud},${longitud},${speed},${direction},${fecha},${acccStatus},${antena}`;
-      return paqueteFormateado;
-    } catch (error) {
-      console.error("Error al crear el paquete autoleaders:", error);
-      return null;
-    }
-  }
-
-  try {
-    const paquete = paqueteAutoleaders();
-    if (paquete) {
-      console.log(paquete);
-      return paquete;
+  export function handler(data) {
+    if (data.startsWith("$$")) {
+      try {
+        const result = modificadorMeitrack(data);
+        console.log(result);
+        return result;
+      } catch (error) {
+        console.log(error);
+      }
     } else {
-      throw new Error("El paquete autoleaders es nulo o indefinido.");
+      console.log("No es un mensaje Meitrack:", data);
     }
-  } catch (error) {
-    console.error("Error al generar y retornar el paquete autoleaders:", error);
-    return null;
   }
 }
-
-export function handler(data) {
-  if (data.startsWith("$$")) {
-    try {
-      const result = modificadorMeitrack(data);
-      console.log(result)
-    } catch (error) {
-      console.log(error);
-    }
-  } else {
-    console.log("No es un mensaje Meitrack:", data);
-  }
-}
-
 export default handler;
