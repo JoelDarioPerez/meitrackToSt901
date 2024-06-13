@@ -6,7 +6,8 @@ const server = createServer((socket) => {
 
   socket.on('data', (data) => {
     console.log('Datos recibidos:', data.toString());
-    const result = handler(data.toString());
+    let envio = data.toString();
+    const result = handler(envio);
 
     const client = new Socket();
     client.connect(9996, 'hwc9996.iopgps.com', () => {
