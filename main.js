@@ -1,6 +1,7 @@
 import { createServer, Socket } from "net";
 import handler from "./reenvio.js";
-
+import { configDotenv } from "dotenv";
+dotenv = configDotenv();
 const server = createServer((socket) => {
   console.log("Cliente conectado");
 
@@ -8,12 +9,12 @@ const server = createServer((socket) => {
     console.log("Datos recibidos:", data.toString());
     let envio = data.toString();
     const result = handler(envio);
-let ip = "hwc9760.gpsog.com";
-let port = "9760"
+    let ip = process.env.REMOTE_IP;
+    let port = process.env.REMOTE_PORT;
     const client = new Socket();
     client.connect(port, ip, () => {
+      client.write(result);
       console.log(`Conectado a ${ip}:${port}`);
-      client.write(result); // Usar client.write para enviar datos al servidor remoto
     });
 
     client.on("close", () => {
@@ -37,4 +38,3 @@ let port = "9760"
 server.listen(9700, () => {
   console.log("Servidor TCP escuchando en el puerto 9700");
 });
-
