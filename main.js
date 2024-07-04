@@ -1,7 +1,8 @@
 import { createServer, Socket } from "net";
 import handler from "./reenvio.js";
 import { configDotenv } from "dotenv";
-dotenv = configDotenv();
+configDotenv();
+
 const server = createServer((socket) => {
   console.log("Cliente conectado");
 
@@ -11,6 +12,12 @@ const server = createServer((socket) => {
     const result = handler(envio);
     let ip = process.env.REMOTE_IP;
     let port = process.env.REMOTE_PORT;
+
+    if (!ip || !port) {
+      console.error("REMOTE_IP o REMOTE_PORT no están configurados.");
+      return;
+    }
+
     const client = new Socket();
     client.connect(port, ip, () => {
       client.write(result);
