@@ -1,13 +1,14 @@
 import { createServer, Socket } from "net";
 import handler from "./reenvio.js";
 import { configDotenv } from "dotenv";
+
 configDotenv();
 
 const server = createServer((socket) => {
   console.log("Cliente conectado");
 
   socket.on("data", (data) => {
-    console.log("Datos recibidos:", data.toString());
+    console.log("Datos recibidos:", data.toString()); // Mostrar datos recibidos
     let envio = data.toString();
     const result = handler(envio);
     let ip = process.env.REMOTE_IP;
