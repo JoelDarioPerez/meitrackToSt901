@@ -95,9 +95,11 @@ function modificadorMeitrack(data) {
 
   function formatearFecha(fecha) {
     try {
+
+      //240704194211
       let year = fecha.slice(0, 2);
-      let day = fecha.slice(2, 4);
-      let month = fecha.slice(4, 6);
+      let day = fecha.slice(4, 6);
+      let month = fecha.slice(2, 4);
       let hour = fecha.slice(6, 8);
       let minute = fecha.slice(8, 10);
       let second = fecha.slice(10, 12);
