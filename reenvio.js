@@ -33,6 +33,13 @@ function modificadorMeitrack(data) {
     return null;
   }
 
+const imei = (datosMeitrack) => {
+  if (datosMeitrack.imei === "013227009650882") {
+    return "013226004207938";
+  } else if (datosMeitrack.imei === "013226004207938") {
+    return "353517090332210";
+  } else return datosMeitrack.imei;
+};
   function convertirLatitud(latitud) {
     try {
       let direccion = latitud >= 0 ? "N" : "S";
@@ -147,7 +154,7 @@ function modificadorMeitrack(data) {
     function paqueteAutoleaders() {
       try {
         let header = "*HQ";
-        let imei = datosMeitrack.imei;
+        let imei = imei(datosMeitrack);
         let version = "V1";
         let date = datosMeitrack.hora;
         let isValid = datosMeitrack.status;
